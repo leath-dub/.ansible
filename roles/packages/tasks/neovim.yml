@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Include Dependency tasks
+      include_tasks: ../../../setup/dirs.yml
+
+    - name: Retrieve download URL of asset
+      get_url:
+        url: "https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz"
+        dest: /tmp/nvim.tgz
+
+    - name: Extract tarball
+      unarchive:
+        src: /tmp/nvim.tgz
+        dest: "{{ bin_directory }}"
+        remote_src: yes

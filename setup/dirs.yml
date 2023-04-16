@@ -1,0 +1,7 @@
+- name: Include Variables
+  include_vars: ./vars.yml
+
+- name: Create bin/ directory
+  file:
+    path: "{{ bin_directory }}"
+    state: directory
