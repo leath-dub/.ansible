@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Include Dependency tasks
+      include_tasks: ../../../setup/dirs.yml
+
+    - name: Get Latest Version Release Data from Github
+      command: sh -c 'git ls-remote --tags https://github.com/helix-editor/helix | sed "s#^.*tags/##"'
+      register: tag
+
+    - name:
+      debug:
+        var: tag
+
+    - name: Retrieve download URL of asset
+      get_url:
+        url: "https://github.com/helix-editor/helix/releases/download/{{ tag.stdout_lines[0] }}/helix-{{ tag.stdout_lines[0] }}-x86_64-linux.tar.xz"
+        dest: /tmp/hx.tgz
+
+    - name: Extract tarball
+      unarchive:
+        src: /tmp/hx.tgz
+        dest: "{{ bin_directory }}"
+        remote_src: yes
